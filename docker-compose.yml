@@ -1,0 +1,34 @@
+version: '3'
+services:
+    web:
+        image: nginx:latest
+        ports: 
+            - '8080:8080'
+        volumes: 
+            - ./nginx.conf:/etc/nginx/conf.d/nginx.conf
+            - ./app:/app
+        links: 
+            - php
+
+    php:
+        build: 
+            context: .
+            dockerfile: DOCKERFILE
+        volumes: 
+            - ./app:/app
+        links: 
+            - mysql
+    mysql:
+        image: mariadb
+        environment: 
+            MYSQL_ROOT_PASSWORD: 'senhaMarota'
+            MYSQL_USER: 'NicoPenico'
+            MYSQL_PASSWORD: 'senhasupersecreta'
+            MYSQL_DATABASE: 'david-powers'
+        volumes:
+            - mysqldata:/var/lib/mysql
+        ports: 
+            - '3306:3306'
+volumes: 
+    mysqldata:
+        driver: local
